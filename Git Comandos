@@ -1,0 +1,14 @@
+git checkout -b guzmanma
+
+git add --all
+
+git commit -m "Tarea de Miguel Angel Guzman (Facebook)"
+
+git push -u origin guzmanma
+
+
+https://github.com
+
+Actualizar LOCAL
+
+git pull origin  guzmanma

@@ -1,0 +1,845 @@
+{
+	"info": {
+		"_postman_id": "a2cc0962-e980-43eb-a25e-767cd7dd1c0a",
+		"name": "Request",
+		"description": "Crear Usuario, publicar anuncio, edittarlo y borrarlo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get token fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2d80a1cf-41a0-43ae-b73a-af215093a76a",
+						"exec": [
+							"pm.test(\"Validar Estatus\", function() {",
+							"    pm.response.to.have.status(400)",
+							"});",
+							"",
+							"pm.test(\"Body incluya error\", function() {",
+							"   pm.expect(pm.response.text()).to.include(\"error\");",
+							"});",
+							"",
+							"pm.test(\"Body contenga validacion\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData.error.code);",
+							"    pm.expect((jsonData.error.code)).equals('VALIDATION_FAILED');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NuevoUsuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "73f321f7-56f0-4110-afc0-74e6b54edea6",
+						"exec": [
+							"let user = \"vendedor\" + (Math.floor(Math.random() * 5757) + 3) + \"@ventas.com\";",
+							"let cve = (_.random(111111,999999));",
+							"",
+							"console.log(user,cve);",
+							"pm.environment.set(\"email\", user);",
+							"",
+							"let encodeKeys = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(user + \":\" + cve));",
+							"",
+							"console.log(encodeKeys);",
+							"",
+							"pm.environment.set(\"encode64\", encodeKeys);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c721eb66-556e-4511-b163-81bfe8add098",
+						"exec": [
+							"pm.test(\"Test - Validar status de creado\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test - La respuesta es un JSON valido\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Validar name & email\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).not.eq(null);",
+							"    pm.expect(jsonData.email).not.eq(null);",
+							"});",
+							"",
+							"// Tomar el Token del Response y Setearlo",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.access_token);",
+							"postman.setEnvironmentVariable(\"account_id\", jsonData.account.account_id);",
+							"postman.setEnvironmentVariable(\"nombre\", jsonData.account.name);",
+							"postman.setEnvironmentVariable(\"uuid\", jsonData.account.uuid);",
+							"",
+							"console.log(\"account_id\", jsonData.account.account_id);",
+							"console.log(\"Token\", jsonData.access_token);",
+							"console.log(\"name\", jsonData.account.name);",
+							"console.log(\"uuid\", jsonData.account.uuid);",
+							"",
+							"let messageString = jsonData.account.account_id;",
+							"postman.setEnvironmentVariable(\"usuario\", messageString.split('/')[3]);",
+							"console.log(\"usuario\", messageString.split('/')[3]);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{encode64}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"account\":{\"email\":\"{{email}}\"}}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1.1/private/accounts",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ActualizarTelefono",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3091742a-53ff-4034-b360-219453e90b70",
+						"exec": [
+							"pm.environment.set(\"telefono\",(_.random(1111111111,9999999999)));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ca6f4b5-fdf1-44f5-875e-153254d2f76b",
+						"exec": [
+							"pm.test(\"Test - Validar status del cambio\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body contenga validacion\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData.account.can_publish);",
+							"    pm.expect((jsonData.account.can_publish)).equals(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"account\":{\"name\":\"{{nombre}}\",\"phone\":\"{{telefono}}\", \"phone_hidden\": true}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1{{account_id}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CrearAnuncio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "32dd5996-a298-43d4-bc01-9d782671a44f",
+						"exec": [
+							"pm.test(\"Test - Validar status de creado\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test - La respuesta es un JSON valido\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Validar Nuevo & Subject\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.action.action_id).not.eq(null);",
+							"    pm.expect(jsonData.action.action_type).eq('new');",
+							"    pm.expect(jsonData.ad.subject).eq('Juego de Cubiertos');",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"articulo\", jsonData.ad.ad_id);",
+							"",
+							"let messageString = jsonData.ad.ad_id;",
+							"postman.setEnvironmentVariable(\"articulo\", messageString.split('/')[5]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5be43fd5-cca4-49c8-87da-e2058ecdccf6",
+						"exec": [
+							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
+							"const ventas = \" - \" + texto;",
+							"",
+							"console.log(Math.random().toString(36).substring(5,17));",
+							"",
+							"pm.environment.set(\"Texto\",ventas);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "x-nga-source",
+						"value": "PHOENIX_DESKTOP",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"ad\":{\"locations\":[{\"code\":\"11\",\"key\":\"region\",\"label\":\"Baja California Sur\",\"locations\":[{\"code\":\"86131\",\"key\":\"municipality\",\"label\":\"Loreto\",\"locations\":[{\"code\":\"86299\",\"key\":\"area\",\"label\":\"Zaragoza\"}]}]}],\"subject\":\"Juego de Cubiertos\",\"body\":\"Juego de cubiertos para su mesa:  {{Texto}}\",\"category\":{\"code\":\"3042\"},\"images\":[],\"price\":{\"currency\":\"MXN\",\"price_value\":857},\"ad_details\":{},\"phone_hidden\":1,\"plate\":\"\",\"vin\":\"\",\"type\":{\"code\":\"s\",\"label\":\"\"},\"ad\":\"Juego de Cubiertos\"},\"category_suggestion\":false,\"commit\":true}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1.7{{account_id}}/klfst?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.7{{account_id}}",
+						"klfst"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EditarAnuncio",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fab116bc-ca02-47bb-8180-93abb6300f2f",
+						"exec": [
+							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
+							"const ventas = \" - \" + texto;",
+							"",
+							"console.log(Math.random().toString(36).substring(5,17));",
+							"",
+							"pm.environment.set(\"Texto\",ventas);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "567a6eca-7ec4-4ce9-93b7-63377a3af93e",
+						"exec": [
+							"pm.test(\"Test - Validar status de Editado\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test - La respuesta es un JSON valido\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Validar Action id & Action Type\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.action.action_id).not.eq(null);",
+							"    pm.expect(jsonData.action.action_type).eq('edit');",
+							"    pm.expect(jsonData.ad.subject).eq('Juego de Cubiertos');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "x-nga-source",
+						"value": "PHOENIX_DESKTOP",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"ad\":{\"locations\":[{\"code\":\"11\",\"key\":\"region\",\"label\":\"Baja California Sur\",\"locations\":[{\"code\":\"86131\",\"key\":\"municipality\",\"label\":\"Loreto\",\"locations\":[{\"code\":\"86299\",\"key\":\"area\",\"label\":\"Zaragoza\"}]}]}],\"subject\":\"Juego de Cubiertos\",\"body\":\"Juego de cubiertos para su mesa:  {{Texto}}\",\"category\":{\"code\":\"3042\"},\"images\":[],\"price\":{\"currency\":\"MXN\",\"price_value\":875},\"ad_details\":{},\"phone_hidden\":1,\"plate\":\"\",\"vin\":\"\",\"type\":{\"code\":\"s\",\"label\":\"\"},\"ad\":\"Juego de Cubiertos\"},\"category_suggestion\":false,\"commit\":true}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1.7{{account_id}}/klfst/{{articulo}}/actions?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.7{{account_id}}",
+						"klfst",
+						"{{articulo}}",
+						"actions"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validar Direccion Vacia",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cfef5b4e-cb22-431f-be35-f9e38c5c57ce",
+						"exec": [
+							"var Token = pm.environment.get('token');",
+							"var uid = pm.environment.get('uuid');",
+							"",
+							"console.log(uid + \":\" + Token);",
+							"",
+							"let encodeKeys = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(uid + \":\" + Token));",
+							"",
+							"console.log(encodeKeys);",
+							"",
+							"pm.environment.set(\"token2\", encodeKeys);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "331776da-2658-43cf-a224-15e87436d8f8",
+						"exec": [
+							"pm.test(\"Test - Validar status de Editado\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{token2}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/addresses/v1/get",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"addresses",
+						"v1",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar Direccion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e99b379-9f1a-4836-ad4e-6c59b93eb0c5",
+						"exec": [
+							"pm.test(\"Test - Validar status de Actualizado\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"direccion\", jsonData.addressID);",
+							"",
+							"console.log(\"Direccion\", jsonData.addressID);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{token2}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "contact",
+							"value": "Mi Casa",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "9638527410",
+							"type": "text"
+						},
+						{
+							"key": "rfc",
+							"value": "ARTA900602",
+							"type": "text"
+						},
+						{
+							"key": "zipCode",
+							"value": "45080",
+							"type": "text"
+						},
+						{
+							"key": "exteriorInfo",
+							"value": "Av. La Calma # 1523",
+							"type": "text"
+						},
+						{
+							"key": "region",
+							"value": "11",
+							"type": "text"
+						},
+						{
+							"key": "municipality",
+							"value": "296",
+							"type": "text"
+						},
+						{
+							"key": "alias",
+							"value": "Mi Casa",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/addresses/v1/create",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"addresses",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validar Direccion Nueva",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dc5fe647-a615-4d8c-82e0-d3a61f4b3e2b",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "73ae06d9-4ae8-4406-b8e9-053f68d4dd8a",
+						"exec": [
+							"pm.test(\"Test - Validar status de Editado\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"/*pm.test(\"Validar misma direccion Creada\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var Address = pm.environment.get('direccion');",
+							"    console.log(\"Address\", Address);",
+							"    console.log(\"Direccion\", jsonData.addresses);",
+							"    pm.expect(jsonData.addresses).to.eq(Address);",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Basic {{token2}}"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/addresses/v1/get",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"addresses",
+						"v1",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mensajes sin Leer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "69690960-a9c5-441c-8267-8549a27f734d",
+						"exec": [
+							"pm.test(\"Test - Validar status Leido\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1/api/users/{{uuid}}/counter",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1",
+						"api",
+						"users",
+						"{{uuid}}",
+						"counter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "500e965d-73ca-4e96-987e-9cca6e6f6b0a",
+						"exec": [
+							"pm.test(\"Test - Validar status de Balance, con TimeOut\", function (done) {",
+							"    setTimeout(() => {",
+							"        pm.expect(pm.response.code).to.eq(200);",
+							"        done();",
+							"    }, 5000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/credits/v1{{account_id}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"credits",
+						"v1{{account_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver Categorias",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f21ab8ae-970a-450c-89af-0584e62b40fc",
+						"exec": [
+							"pm.test(\"Test - Validar status de Categorias, con TimeOut\", function (done) {",
+							"    setTimeout(() => {",
+							"        pm.expect(pm.response.code).to.eq(200);",
+							"        done();",
+							"    }, 5000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1/public/categories/insert",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1",
+						"public",
+						"categories",
+						"insert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar Anuncio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d990c11e-0405-4f46-b65d-a0d0265fbc62",
+						"exec": [
+							"pm.test(\"Test - Validar status de Borrado\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test - La respuesta es un JSON valido\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Validar Action id & Action Type\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.action.action_id).not.eq(null);",
+							"    pm.expect(jsonData.action.action_type).eq('delete');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"delete_reason\":{\"code\":\"5\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/nga/api/v1{{account_id}}/klfst/{{articulo}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}",
+						"klfst",
+						"{{articulo}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,94 @@
+{
+	"id": "f1fa83cc-f75c-47cb-81f4-3845bfa7f35b",
+	"name": "QA",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "webapi.segundamano.mx",
+			"enabled": true
+		},
+		{
+			"key": "encoder",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "email",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "agente",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "encode64",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "telefono",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "nombre",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Autorization",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Account",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "account_id",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "uuid",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "usuario",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Texto",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articulo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "token2",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "direccion",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2020-05-08T20:54:04.053Z",
+	"_postman_exported_using": "Postman/7.23.0"
+}
