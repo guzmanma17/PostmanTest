@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a2cc0962-e980-43eb-a25e-767cd7dd1c0a",
+		"_postman_id": "15570d48-167a-46a4-9298-49b379207766",
 		"name": "Request",
 		"description": "Crear Usuario, publicar anuncio, edittarlo y borrarlo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -12,7 +12,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2d80a1cf-41a0-43ae-b73a-af215093a76a",
+						"id": "fa8e2987-d88b-4cff-9ceb-c8c1837e68d4",
 						"exec": [
 							"pm.test(\"Validar Estatus\", function() {",
 							"    pm.response.to.have.status(400)",
@@ -64,7 +64,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "73f321f7-56f0-4110-afc0-74e6b54edea6",
+						"id": "6e660ed5-ab2e-482e-bc53-8f60a4e2952c",
 						"exec": [
 							"let user = \"vendedor\" + (Math.floor(Math.random() * 5757) + 3) + \"@ventas.com\";",
 							"let cve = (_.random(111111,999999));",
@@ -84,7 +84,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c721eb66-556e-4511-b163-81bfe8add098",
+						"id": "b7ef6789-7565-408b-9cbb-6f86825a83a1",
 						"exec": [
 							"pm.test(\"Test - Validar status de creado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -95,13 +95,13 @@
 							"});",
 							"",
 							"pm.test(\"Validar name & email\", function () {",
-							"    var jsonData = pm.response.json();",
+							"    let jsonData = pm.response.json();",
 							"    pm.expect(jsonData.name).not.eq(null);",
 							"    pm.expect(jsonData.email).not.eq(null);",
 							"});",
 							"",
 							"// Tomar el Token del Response y Setearlo",
-							"var jsonData = JSON.parse(responseBody);",
+							"let jsonData = JSON.parse(responseBody);",
 							"postman.setEnvironmentVariable(\"token\", jsonData.access_token);",
 							"postman.setEnvironmentVariable(\"account_id\", jsonData.account.account_id);",
 							"postman.setEnvironmentVariable(\"nombre\", jsonData.account.name);",
@@ -113,8 +113,9 @@
 							"console.log(\"uuid\", jsonData.account.uuid);",
 							"",
 							"let messageString = jsonData.account.account_id;",
-							"postman.setEnvironmentVariable(\"usuario\", messageString.split('/')[3]);",
-							"console.log(\"usuario\", messageString.split('/')[3]);"
+							"let accountId = messageString.split('/')[3];",
+							"postman.setEnvironmentVariable(\"usuario\", accountId );",
+							"console.log(\"usuario\", accountId);"
 						],
 						"type": "text/javascript"
 					}
@@ -174,7 +175,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "3091742a-53ff-4034-b360-219453e90b70",
+						"id": "961a63b5-7d22-4762-85c1-6186dfb22e35",
 						"exec": [
 							"pm.environment.set(\"telefono\",(_.random(1111111111,9999999999)));"
 						],
@@ -184,7 +185,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0ca6f4b5-fdf1-44f5-875e-153254d2f76b",
+						"id": "2cc20cb8-5331-474b-9ff4-25a747742bf0",
 						"exec": [
 							"pm.test(\"Test - Validar status del cambio\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -244,7 +245,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "32dd5996-a298-43d4-bc01-9d782671a44f",
+						"id": "8ba7ca15-1bf1-4de9-8468-e75aacc4ee59",
 						"exec": [
 							"pm.test(\"Test - Validar status de creado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -273,7 +274,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5be43fd5-cca4-49c8-87da-e2058ecdccf6",
+						"id": "251b82e5-cf16-44c8-aeec-0cc24dfc2446",
 						"exec": [
 							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
 							"const ventas = \" - \" + texto;",
@@ -347,7 +348,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "fab116bc-ca02-47bb-8180-93abb6300f2f",
+						"id": "e3ab0a2c-1065-43a1-9900-9325380a4cd8",
 						"exec": [
 							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
 							"const ventas = \" - \" + texto;",
@@ -362,7 +363,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "567a6eca-7ec4-4ce9-93b7-63377a3af93e",
+						"id": "dd74669b-fb68-49b3-b98b-edf3c1cba4ba",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -444,7 +445,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "cfef5b4e-cb22-431f-be35-f9e38c5c57ce",
+						"id": "df7734b5-0891-470e-82f8-36ca93679475",
 						"exec": [
 							"var Token = pm.environment.get('token');",
 							"var uid = pm.environment.get('uuid');",
@@ -463,7 +464,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "331776da-2658-43cf-a224-15e87436d8f8",
+						"id": "27c63174-53a5-4445-a5fc-61c5ad944a78",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -503,7 +504,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4e99b379-9f1a-4836-ad4e-6c59b93eb0c5",
+						"id": "ad6e741e-f234-4eee-9ba8-63b1cc7ee1eb",
 						"exec": [
 							"pm.test(\"Test - Validar status de Actualizado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -597,7 +598,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "dc5fe647-a615-4d8c-82e0-d3a61f4b3e2b",
+						"id": "4d56cdcb-c0e7-4644-bb39-019986e54c8e",
 						"exec": [
 							""
 						],
@@ -607,7 +608,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "73ae06d9-4ae8-4406-b8e9-053f68d4dd8a",
+						"id": "da9bebed-f156-40f9-8070-0b0da8e73b68",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -655,7 +656,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "69690960-a9c5-441c-8267-8549a27f734d",
+						"id": "f7d78d19-758b-41c5-9750-14a11d55aa2a",
 						"exec": [
 							"pm.test(\"Test - Validar status Leido\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -699,7 +700,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "500e965d-73ca-4e96-987e-9cca6e6f6b0a",
+						"id": "b63f0fe3-dbc1-42df-94a5-f439f3490b4d",
 						"exec": [
 							"pm.test(\"Test - Validar status de Balance, con TimeOut\", function (done) {",
 							"    setTimeout(() => {",
@@ -735,7 +736,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f21ab8ae-970a-450c-89af-0584e62b40fc",
+						"id": "5fe38c9b-dd82-4b33-ae1f-d73a939e4e93",
 						"exec": [
 							"pm.test(\"Test - Validar status de Categorias, con TimeOut\", function (done) {",
 							"    setTimeout(() => {",
@@ -775,7 +776,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d990c11e-0405-4f46-b65d-a0d0265fbc62",
+						"id": "dfc929c3-4a06-44b7-9deb-b87b9aebf840",
 						"exec": [
 							"pm.test(\"Test - Validar status de Borrado\", function () {",
 							"    pm.response.to.have.status(200);",
