@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "15570d48-167a-46a4-9298-49b379207766",
-		"name": "Request",
+		"_postman_id": "fa2dde96-b700-4056-bc84-5330fdf84195",
+		"name": "Request copy",
 		"description": "Crear Usuario, publicar anuncio, edittarlo y borrarlo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fa8e2987-d88b-4cff-9ceb-c8c1837e68d4",
+						"id": "0cb9f4db-6954-4ed1-8537-14daa21191c5",
 						"exec": [
 							"pm.test(\"Validar Estatus\", function() {",
 							"    pm.response.to.have.status(400)",
@@ -64,7 +64,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "6e660ed5-ab2e-482e-bc53-8f60a4e2952c",
+						"id": "55edfa86-85c6-47c2-9dcf-72392403dd83",
 						"exec": [
 							"let user = \"vendedor\" + (Math.floor(Math.random() * 5757) + 3) + \"@ventas.com\";",
 							"let cve = (_.random(111111,999999));",
@@ -84,7 +84,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b7ef6789-7565-408b-9cbb-6f86825a83a1",
+						"id": "8f5aa0c1-860d-40d0-8add-7dc959f7e86b",
 						"exec": [
 							"pm.test(\"Test - Validar status de creado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -114,8 +114,17 @@
 							"",
 							"let messageString = jsonData.account.account_id;",
 							"let accountId = messageString.split('/')[3];",
-							"postman.setEnvironmentVariable(\"usuario\", accountId );",
-							"console.log(\"usuario\", accountId);"
+							"let uuid = jsonData.account.uuid;",
+							"",
+							"postman.setEnvironmentVariable(\"usuario\", accountId);",
+							"//cambio Gaby",
+							"postman.setEnvironmentVariable(\"uuid\", uuid);",
+							"",
+							"console.log(\"usuario\", accountId);",
+							"//cambio Gaby",
+							"console.log(\"uuid\", uuid);",
+							"",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -175,7 +184,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "961a63b5-7d22-4762-85c1-6186dfb22e35",
+						"id": "fd56bbba-cc82-4aa4-8c73-88dedfadfe99",
 						"exec": [
 							"pm.environment.set(\"telefono\",(_.random(1111111111,9999999999)));"
 						],
@@ -185,7 +194,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2cc20cb8-5331-474b-9ff4-25a747742bf0",
+						"id": "699dfd3f-2a4c-42d4-a5e1-22d6b24aa2a6",
 						"exec": [
 							"pm.test(\"Test - Validar status del cambio\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -245,7 +254,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8ba7ca15-1bf1-4de9-8468-e75aacc4ee59",
+						"id": "6cf1fd74-4340-4952-a78c-931e52793dac",
 						"exec": [
 							"pm.test(\"Test - Validar status de creado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -274,7 +283,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "251b82e5-cf16-44c8-aeec-0cc24dfc2446",
+						"id": "3ee00bb2-9733-4647-9303-4d4b2874b151",
 						"exec": [
 							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
 							"const ventas = \" - \" + texto;",
@@ -348,7 +357,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "e3ab0a2c-1065-43a1-9900-9325380a4cd8",
+						"id": "e7174747-2c34-4adc-a2c7-93e0ad5edc76",
 						"exec": [
 							"texto = Math.random().toString(36).substring(5,17) + Math.random().toString(36).substring(5,17);",
 							"const ventas = \" - \" + texto;",
@@ -363,7 +372,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dd74669b-fb68-49b3-b98b-edf3c1cba4ba",
+						"id": "7f750e75-ad99-45f2-bea9-e82aa6ce36b4",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -445,7 +454,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "df7734b5-0891-470e-82f8-36ca93679475",
+						"id": "fad5b461-6ecd-4545-8b71-d1e227dd295c",
 						"exec": [
 							"var Token = pm.environment.get('token');",
 							"var uid = pm.environment.get('uuid');",
@@ -464,7 +473,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "27c63174-53a5-4445-a5fc-61c5ad944a78",
+						"id": "04b89a3c-38fa-4ba1-8845-56f7e95c3ce7",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -504,7 +513,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ad6e741e-f234-4eee-9ba8-63b1cc7ee1eb",
+						"id": "f2645c39-5eae-4eee-ae28-07c0d257c35c",
 						"exec": [
 							"pm.test(\"Test - Validar status de Actualizado\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -598,7 +607,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "4d56cdcb-c0e7-4644-bb39-019986e54c8e",
+						"id": "ba77d472-e184-4dfb-90ff-ae3858dbb948",
 						"exec": [
 							""
 						],
@@ -608,7 +617,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "da9bebed-f156-40f9-8070-0b0da8e73b68",
+						"id": "7061a9b6-34c9-4d41-a68e-f6fcfcc7d050",
 						"exec": [
 							"pm.test(\"Test - Validar status de Editado\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -656,7 +665,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f7d78d19-758b-41c5-9750-14a11d55aa2a",
+						"id": "035fbfff-7f84-4466-adf2-19f3ef88c5cb",
 						"exec": [
 							"pm.test(\"Test - Validar status Leido\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -700,7 +709,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b63f0fe3-dbc1-42df-94a5-f439f3490b4d",
+						"id": "dff1d106-ffa4-44bb-b03d-158807951544",
 						"exec": [
 							"pm.test(\"Test - Validar status de Balance, con TimeOut\", function (done) {",
 							"    setTimeout(() => {",
@@ -736,7 +745,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5fe38c9b-dd82-4b33-ae1f-d73a939e4e93",
+						"id": "c96dce85-7057-4969-9ffa-9a43dbc0ff83",
 						"exec": [
 							"pm.test(\"Test - Validar status de Categorias, con TimeOut\", function (done) {",
 							"    setTimeout(() => {",
@@ -776,7 +785,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dfc929c3-4a06-44b7-9deb-b87b9aebf840",
+						"id": "747484f1-837d-4ac7-b3ca-d9d2a5c83181",
 						"exec": [
 							"pm.test(\"Test - Validar status de Borrado\", function () {",
 							"    pm.response.to.have.status(200);",
